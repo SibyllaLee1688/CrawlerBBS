@@ -7,7 +7,7 @@ from sgmllib import SGMLParser
 dic = {}
 
 #the spider engine for sina blog
-class bbs_spider(SGMLParser):
+class bbs_parser(SGMLParser):
     def reset(self):
         SGMLParser.reset(self)
         self.url = []
@@ -29,6 +29,7 @@ class bbs_index_parser(SGMLParser):
 			st = attrs.split('\n')#split the string
 			for item in st:
 				self.content.append(item)
+				
 #the spider to get all the context's id in bbs.whu.edu.cn/wForum/board.php?name=*
 class bbs_id_parser(SGMLParser):
 	def reset(self):
@@ -39,7 +40,6 @@ class bbs_id_parser(SGMLParser):
 		if attrs.find('boardName') != -1:
 			st = attrs.split('\n')
 			for item in st:
-			    print item
 			    self.content.append(item)
 	
 

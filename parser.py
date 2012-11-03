@@ -7,7 +7,7 @@ from sgmllib import SGMLParser
 dic = {}
 
 #the spider engine for sina blog
-class bbs_spider(SGMLParser):
+class bbs_parser(SGMLParser):
     def reset(self):
         SGMLParser.reset(self)
         self.url = []

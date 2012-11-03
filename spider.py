@@ -31,6 +31,29 @@ def spider_dfs(url):
                 spider_dfs(item)
     return
 
+def deal_with(borderName,ids):
+    url = 'http://bbs.whu.edu.cn/wForum/disparticle.php?boardName='+borderName+'&ID='+ids+'&page='
+    rd = 1
+    post_parser = bbs_parser()
+    is_target = True
+    while is_target and rd < 10:
+        new_url = url + str(rd)
+        rd += 1
+        print new_url
+        
+        
+        try:
+            link_content = urllib2.urlopen(new_url)
+        except URLError as e:
+            print e.reason
+            continue
+        
+        if link_content.code == 200:
+            post_parser = bbs_parser()
+            post_parser.feed(link_content.read())
+        
+    pass
+    
 class BbsSpider:
     def __init__(self ,link):
         self.link = link
@@ -63,29 +86,30 @@ class BbsSpider:
        	self.getIndexPageBoardName()
        	#second form new url just like
        	# bbs.whu.edu.cn/wForum/board.php?name=border_name_e[i]
-       	for item in self.board_name_e:
+       	f = open("1.txt","w")
+       	id_parser = bbs_id_parser()
+       	
+       	for item in self.board_name_e[0:3]:
 			for page_num in range(1,11,1):
 				temp_url = 'http://bbs.whu.edu.cn/wForum/board.php?name=' + \
 				item + '&page=' + str(page_num)
-				self.board_urls.append(temp_url)
-       	#third get all t
-       	for url_item in self.board_urls:
-	        print url_item
-	        try:
-	            url_link = urllib2.urlopen(url_item)
-	        except URLError as e:
-	            print e.reason
-            if url_link.code == 200:
-                id_parser = bbs_id_parser()
-				id_parser.feed(url_link.read())
-				for item in id_parser.content:
-				    if item.find('origin = ') != -1:
-					    tmp = item.split('(')[1]
-					    tp = tmp.split(',')
-					    #self.post_id.append(tp[0])
-					    self.deal()
-					    f.write(tp[0])
-					    f.write('\n')
-        '''
+				
+				try:
+				    url_link = urllib2.urlopen(temp_url)
+				except URLError as e:
+				    print e.reason
+				if url_link.code == 200:
+				    id_parser.feed(url_link.read())
+				    for items in id_parser.content:
+				        if items.find('origin = ') != -1:
+				    	    tmp = items.split('(')[1]
+				    	    tp = tmp.split(',')
+				    	    #self.post_id.append(tp[0])
+				    	    deal_with(item,tp[0])
+				    	    f.write(tp[0])
+				    	    f.write('\n')
+       	#third get all the post's id
+       	    
+			
 #for url in parser.urls:
 #    print url
