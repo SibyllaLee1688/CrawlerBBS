@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import urllib2
 import re
+import sys
 from sgmllib import SGMLParser
         
 # spider engine to get all the link of a target link
@@ -34,10 +35,13 @@ class parser(SGMLParser):
             self.is_just = False
             
 link = urllib2.urlopen("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=Advice&ID=1105516250&page=1")
-
+html = link.read()
 st = parser()
 f = open("2.txt","w")
-st.feed(link.read())
+typ = sys.getfilesystemencoding()
+st.feed(unicode(html,"GB2312").encode('utf-8'))
+
+print st.url[12].find("发信人")
 page = 1
 is_lou = 0
 is_end = False
@@ -48,13 +52,14 @@ poster_time = ""
 poster_re = []
 poster_content = []
 for item in st.url:
-    f.write(item)
-    
     if page == 1:
     #    f.write("ID: ")
-        print item.find(u"楼主".encode('utf-8'))
-        if item.find(u"楼主".encode('utf-8')) != -1:
-            print '楼主'
+        #print item.find("楼")
+        sts = re.findall(ur'楼主',item) 
+        if sts:
+            print 'ne'
+        
+        '''
             is_lou = 1
             is_re = 0
         elif not re.findall(r"第.楼",item):
@@ -73,6 +78,7 @@ for item in st.url:
         elif item.find("--") != -1:
             is_end = True
             
+        '''
         '''
         else:
             if not is_end:
