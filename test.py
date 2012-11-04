@@ -33,15 +33,18 @@ class parser(SGMLParser):
         if self.is_just:
             self.url.append('\n')
             self.is_just = False
-            
-link = urllib2.urlopen("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=Advice&ID=1105516250&page=1")
+
+
+
+link = urllib2.urlopen("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=Electronics&ID=1105509513&pos=3")
 html = link.read()
 st = parser()
 f = open("2.txt","w")
 typ = sys.getfilesystemencoding()
-st.feed(unicode(html,"GB2312").encode('utf-8'))
-
-print st.url[12].find("发信人")
+#st.feed(html.decode("GB2312").encode('utf-8'))
+st.feed(html)
+#tar = u"发信人"
+#print st.url[12].find(tar)
 page = 1
 is_lou = 0
 is_end = False
@@ -51,15 +54,27 @@ poster_title = []
 poster_time = ""
 poster_re = []
 poster_content = []
+final = []
+sts = ""
 for item in st.url:
     if page == 1:
-    #    f.write("ID: ")
-        #print item.find("楼")
-        sts = re.findall(ur'楼主',item) 
-        if sts:
-            print 'ne'
+        if item != '\n':
+            sts = sts + item
+        else:
+            final.append(sts)
+            sts = ""
+for item in final:
+    print item
+        #print len(item),' ',item
         
         '''
+        f.write(str(len(item)))
+        f.write(' ')
+        f.write(item)
+        sts = item.find("楼")
+        #print sts
+        if sts != -1:
+            print 'ne'
             is_lou = 1
             is_re = 0
         elif not re.findall(r"第.楼",item):
@@ -76,7 +91,7 @@ for item in st.url:
         elif item.find("发信站") != -1:
             poster_time = item.split(":")[1].split("(")[1].split(")")[0]
         elif item.find("--") != -1:
-            is_end = True
+            is_end = true
             
         '''
         '''
