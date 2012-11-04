@@ -33,8 +33,10 @@ class parser(SGMLParser):
         if self.is_just:
             self.url.append('\n')
             self.is_just = False
-            
-link = urllib2.urlopen("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=Electronics&ID=1105510034&pos=20")
+
+
+
+link = urllib2.urlopen("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=WHUConnection&ID=72145&pos=13")
 html = link.read()
 st = parser()
 html = html.decode('gbk','ignore').encode('utf-8')
