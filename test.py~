@@ -3,6 +3,7 @@
 import urllib2
 import re
 import sys
+from save_into_db import *
 from sgmllib import SGMLParser
 
 # spider engine to get all the link of a target link
@@ -75,6 +76,7 @@ def get_post(url):
             if st:
                ans = st
         fn.append(ans)
+    final = []
     tf = open("3.txt","w")
     is_post_end = False
     for item in fn:
@@ -112,6 +114,7 @@ def get_post(url):
                 temp.append(poster_content)
                 temp.append(poster_time)
                 final.append(temp)
+                print '...'
                 f.write('ID:\r')
                 f.write(poster_e)
                 f.write('\n')
@@ -135,7 +138,19 @@ def get_post(url):
                 poster_time = ""
     return final
 
-
+bbs_db = bbsDB()
+bbs_db.link_db()
+post_db = Post()
+poster_db = Poster()
 
 st = get_post("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=WHUConnection&ID=72239")
-print st
+print len(st)
+sts = MySQLdb.connect(host = 'localhost',user='root',passwd='19910101',db='bbs_db')
+cursor = sts.cursor()
+bbs_db.select_dbs('bbs_db')
+for item in st:
+    print len(item)
+    post_db.set_value(item[0],item[5],item[2],item[4])
+    post_db.insert_value(bbs_db.cursor)
+    bbs_db.conn.commit()
+bbs_db.conn.close()    
