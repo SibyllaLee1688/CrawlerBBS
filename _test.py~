@@ -4,7 +4,7 @@ import urllib2
 import re
 import sys
 from sgmllib import SGMLParser
-
+        
 # spider engine to get all the link of a target link
 Dic = {}
 
@@ -36,7 +36,7 @@ class parser(SGMLParser):
 
 
 def get_post(url):
-    final = []
+
     link = urllib2.urlopen(url)
     html = link.read()
     st = parser()
@@ -78,7 +78,6 @@ def get_post(url):
     tf = open("3.txt","w")
     is_post_end = False
     for item in fn:
-        temp = []
         tf.write(item)
         tf.write('\n')
         if item.find("发信人") == 0 and not is_start:
@@ -105,13 +104,6 @@ def get_post(url):
             elif item.find("※ 来源") != -1:
                 is_end = False
                 is_start = False
-                temp.append(poster_e)
-                temp.append(poster_c)
-                temp.append(poster_title)
-                temp.append(str(is_lou))
-                temp.append(poster_content)
-                temp.append(poster_time)
-                final.append(temp)
                 f.write('ID:\r')
                 f.write(poster_e)
                 f.write('\n')
@@ -133,9 +125,6 @@ def get_post(url):
                 poster_title = ""
                 poster_content = []
                 poster_time = ""
-    return final
 
 
-
-st = get_post("http://bbs.whu.edu.cn/wForum/disparticle.php?boardName=WHUConnection&ID=72239")
-print st
+    
