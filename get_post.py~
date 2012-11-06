@@ -77,6 +77,7 @@ def get_post(html,st):
                 temp.append(poster_content)
                 temp.append(poster_time)
                 final.append(temp)
+                print '...'
                 f.write('ID:\r')
                 f.write(poster_e)
                 f.write('\n')

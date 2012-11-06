@@ -1,6 +1,15 @@
+#coding=utf8
 import MySQLdb
 
 import re
+import adodb  
+def quote_buffer(buf):
+    """
+    chinese to mysql
+    """
+    retstr = ''.join(map(lambda c:'%02x'%ord(c), buf))
+    retstr = "x'" + retstr + "'"
+    return retstr
 class bbsDB:
 	def __init__(self):
 		f = open("db.ini","r")
@@ -31,7 +40,7 @@ class bbsDB:
 	    self.conn.select_db(db_name)
 	def link_db(self):
 		try:
-		    self.conn = MySQLdb.connect(host = self.host_name,user = self.user_name,passwd = self.user_passwd)
+		    self.conn = MySQLdb.connect(host = self.host_name,user = self.user_name,passwd = self.user_passwd,charset='utf8')
 		except:
 			print 'something wrong when connect the db,please check you db.ini'
 		
@@ -39,18 +48,26 @@ class bbsDB:
 	
 class Poster:
 	def __init__(self):
-		self.ID = ""
+		self.Id = ""
 		self.name = ""
 	def set_value(self,Id,name):
-		self.Id = ID
+		self.Id = Id
 		self.name = name
+	def get_id(self,poster_id,cursor):
+	    query = "select * from poster where user_IDS = '"+ poster_id+"'"
+	    st = cursor.execute(query)
+	    result = cursor.fetchone()
+	    return result[0]
 	def insert_value(self,cursor):
 		values = []
-		is_exit = cursor.execute("select * from poster where user_ID = " + self.ID)
+		query = "select * from poster where user_IDS= '" + self.Id +"'"
+		is_exit = cursor.execute(query)
+		
 		if not is_exit:
-			values.append(self.ID)
+			values.append(self.Id)
 			values.append(self.name)
-			cursor.execute("insert into poster(user_ID,user_name) values('%s %s')",values)
+			
+			cursor.execute("insert into poster(user_IDS,user_names) values(%s,%s)",values)
 		
 class Post:
 	def __init__(self):
@@ -63,6 +80,14 @@ class Post:
 		self.post_time = post_time
 		self.post_title = post_title
 		self.post_content = post_content
+	
+	def get_id(self,poster_id,poster_time,cursor):
+	    query = "select * from post where poster_id = '" + poster_id + "' and poster_time = '" + poster_time + "'"
+	    print poster_id,poster_time
+	    cursor.execute(query)
+	    result = cursor.fetchone()
+	    return result[0]
+    
 	def insert_value(self,cursor):
 		values = []
 		values.append(self.poster_id)
@@ -91,5 +116,5 @@ class post_poster_relation:
 		values.append(self.poster_id)
 		values.append(self.post_id)
 		values.append(self.relation)
-		cursor.execute("insert into post_poster_relation values('%s %s %s')",values)
+		cursor.execute("insert into post_poster_relation values(%s,%s,%s)",values)
 
