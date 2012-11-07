@@ -37,7 +37,7 @@ class bbs_parser(SGMLParser):
         if self.is_td and attrs != " ":
             self.url.append(attrs)
             self.is_just = True
-        if attrs.find('guest用户暂无权阅读一年') != -1:
+        if attrs.find('guest用户暂无权限阅读') != -1:
             print 'error'
             self.is_target = False
         

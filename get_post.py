@@ -10,7 +10,6 @@ from parser import bbs_parser
 Dic = {}
 def get_post(html,st):
     final = []
-    f = open("2.txt","w")
     st.feed(html)
     page = 1
     is_lou = 0
@@ -40,12 +39,9 @@ def get_post(html,st):
                ans = st
         fn.append(ans)
     final = []
-    tf = open("3.txt","w")
     is_post_end = False
     for item in fn:
         temp = []
-        tf.write(item)
-        tf.write('\n')
         if item.find("发信人") == 0 and not is_start:
             name = item.split(":")[1].split("(")
             poster_e = name[0]
@@ -77,21 +73,6 @@ def get_post(html,st):
                 temp.append(poster_content)
                 temp.append(poster_time)
                 final.append(temp)
-                f.write('ID:\r')
-                f.write(poster_e)
-                f.write('\n')
-                f.write('name\r')
-                f.write(poster_c)
-                f.write('\nTitle:\r')
-                f.write(poster_title)
-                f.write(str(is_lou))
-                f.write('\nContent:\r')
-                for each in poster_content:
-                    f.write(each)
-                    f.write('\n\r')
-                f.write('time:\r')
-                f.write(poster_time)
-                f.write('\n\n')
                 is_lou = 0
                 poster_c = ""
                 poster_e = ""
